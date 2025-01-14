@@ -6,7 +6,7 @@ public class Solution {
         int number = sc.nextInt();
         int answer = 0;
         
-        for(int i=0; i<=String.valueOf(number).length()+10; i++){
+        for(int i=0, len = String.valueOf(number).length(); i<len; i++){
             answer += number % 100;
             number /= 100;
         }
