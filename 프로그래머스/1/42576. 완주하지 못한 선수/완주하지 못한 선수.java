@@ -1,24 +1,24 @@
 import java.util.*;
 
-class Solution {
-    public String solution(String[] participant, String[] completion) {
-        Map<String, Integer> isComplete = new HashMap<>();
+public class Solution {
+    public static String solution(String[] participant, String[] completion) {
         String answer = "";
+        HashMap<String, Integer> map = new HashMap<>();
         
-        // 참가자 이름마다 숫자 증가
-        for (String Aparticipant : participant){
-            isComplete.put(Aparticipant, isComplete.getOrDefault(Aparticipant, 0)+1);
+        // 동명이인을 고려하여 참가자 이름과 숫자 추가
+        for (String p : participant) {
+            map.put(p, map.getOrDefault(p, 0)+1);
         }
         
-        // 완료한 참가자의 이름마다 숫자 감소
-        for (String complete : completion){
-            isComplete.put(complete, isComplete.getOrDefault(complete, 0)-1);
+        // 완료주자의 이름을 참가자 숫자에서 하나씩 제거
+        for (String c : completion) {
+            map.put(c, map.getOrDefault(c, 0)-1); 
         }
         
-        // 완료하지 못해 참가자의 이름 하나가 1이 됨(조건)
-        for (String Aparticipant : participant){
-            if (isComplete.get(Aparticipant) > 0){
-                answer = Aparticipant;
+        // 참가자 숫자가 0이 아니라면 answer
+        for (String p : participant) {
+            if (map.get(p) != 0) {
+                answer = p;
             }
         }
         return answer;
