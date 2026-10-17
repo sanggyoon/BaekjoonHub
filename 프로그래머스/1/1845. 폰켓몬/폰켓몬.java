@@ -1,11 +1,12 @@
 import java.util.*;
-
 class Solution {
     public int solution(int[] nums) {
-        Set<Integer> number = new HashSet<>();
-        for (int num : nums) number.add(num);
-        
-        int answer = nums.length/2 >= number.size() ? number.size() : nums.length/2;
+        int answer = 0;
+        HashSet<Integer> hs = new HashSet<>();
+        for (int n : nums) {
+            hs.add(n);
+        }
+        answer = (nums.length/2 > hs.size()) ? hs.size() : nums.length/2; 
         return answer;
     }
 }
