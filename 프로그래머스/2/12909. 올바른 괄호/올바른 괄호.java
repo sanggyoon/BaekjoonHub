@@ -3,19 +3,20 @@ import java.util.*;
 class Solution {
     boolean solution(String s) {
         boolean answer = true;
-        Deque<Character> stack = new ArrayDeque<>();
+        StringBuilder sb = new StringBuilder(s);
         
-        for (int i=0; i<s.length(); i++){
-            char c = s.charAt(i);
-            if (c == '('){
-                stack.push('(');
-            } else if (c == ')'){
-                if (stack.isEmpty()) return false;
-                stack.pop();
+        Deque<Character> ad = new ArrayDeque<>();
+        for (int i=0; i<s.length(); i++) {
+            char c = sb.charAt(i);
+            if (c == '(') {
+                ad.addLast(c);
+            } else if (c == ')' && !ad.isEmpty()) {
+                ad.removeLast();
+            } else if (c == ')' && ad.isEmpty()){
+                answer = false;
             }
         }
-        
-        if (!stack.isEmpty()) return false;
+        if (!ad.isEmpty()) return false;
         return answer;
     }
 }
