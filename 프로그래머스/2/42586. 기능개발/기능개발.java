@@ -1,47 +1,35 @@
+import java.util.*;
+
 class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
-        int Psize = progresses.length;
-        int[] terms = new int[Psize];
         
-        // 요소마다 걸리는 기간 구하기
-        for (int i=0; i<Psize; i++){
-            int left = 100 - progresses[i];
-            int term = 0;
-            if (left%speeds[i] == 0){
-                term = left/speeds[i];
-            } else {
-                term = left/speeds[i] + 1;
-            }
-            terms[i] = term;
+        Deque<Integer> remain_days = new ArrayDeque<>();
+        for (int i=0; i<progresses.length; i++) {
+            int remain_day = (100-progresses[i]+speeds[i]-1)/speeds[i];
+            remain_days.addLast(remain_day);
+            // System.out.println(i + "번째 프로세스의 남은 기간: " + remain_day);
         }
         
-        // retrun의 개수 구하기
-        int max = 0;
-        int Asize = 0;
-        for (int j=0; j<terms.length; j++){
-            if (terms[j] > max){
-                max = terms[j];
-                Asize++;
+        Deque<Integer> deploy_stack = new ArrayDeque<>();
+        int sum_days = 0;
+        while (!remain_days.isEmpty()) {
+            // System.out.println("누적일수:"+sum_days+" | 비교일수:"+remain_days.peekFirst());
+            if (sum_days < remain_days.peekFirst()) {
+                sum_days = remain_days.peekFirst();
+                deploy_stack.addLast(1);
+                remain_days.removeFirst();
+            } else if (sum_days >= remain_days.peekFirst()) {
+                deploy_stack.addLast(deploy_stack.removeLast()+1);
+                remain_days.removeFirst();
             }
         }
         
-        // 스택 ex) [5, 10, 1, 1, 20, 1]
-        int[] answer = new int[Asize];
-        int index = 0;
-        int maxterm = terms[0];
-        int count = 0;
-        for (int k=0; k<terms.length; k++){
-            if (terms[k] <= maxterm){
-                count++;
-            } else {
-                answer[index] = count;
-                index++;
-                count = 1;
-                maxterm = terms[k];
-            }
+        List<Integer> list = new ArrayList<>();
+        while (!deploy_stack.isEmpty()) {
+            list.add(deploy_stack.removeFirst());
         }
-        answer[index] = count;
-            
+        int[] answer = list.stream().mapToInt(i->i).toArray();
+        
         return answer;
     }
 }
