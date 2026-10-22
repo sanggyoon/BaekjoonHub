@@ -1,41 +1,48 @@
 import java.util.*;
-
 class Solution {
     public int solution(int[][] maps) {
-        int h = maps.length;
-        int w = maps[0].length;
+        int answer = 0;
+        int row = maps.length;
+        int col = maps[0].length;
+        int[][] visited = new int[row][col];
+        Deque<int[]> que = new ArrayDeque<>();
         
-        int answer = bfs(maps, h, w);
-        return answer;
-    }
-
-    public int bfs(int[][] maps, int h, int w) {
-        int distant[][] = new int[h][w];
-        int[] moveX = {1, -1, 0, 0};
-        int[] moveY = {0, 0, 1, -1};
+        que.addLast(new int[]{0, 0});
+        visited[0][0] = 1;  
         
-        Queue<int[]> q = new ArrayDeque<>();
-        q.offer(new int[]{0, 0});
-        distant[0][0] = 1;
-        
-        while (!q.isEmpty()){
-            int[] curr = q.poll();
-            int x = curr[0];
-            int y = curr[1];
-            
-            if (x == h-1 && y == w-1) return distant[x][y];
-            
-            for (int i=0; i<4; i++){
-                int nx = x + moveX[i];
-                int ny = y + moveY[i];
-                
-                if (nx >= h || ny >= w || nx < 0 || ny < 0) continue;
-                if (maps[nx][ny] == 0 || distant[nx][ny] != 0) continue;
-                
-                distant[nx][ny] = distant[x][y] + 1;
-                q.offer(new int[]{nx, ny});
-            }
+        while (!que.isEmpty()) {
+            int[] location = que.removeFirst();
+            int y = location[0];
+            int x = location[1];
+            if (y == row-1 && x == col-1) return visited[y][x];
+            bfs(maps, row, col, y, x, que, visited);
         }
         return -1;
+    }
+    
+    public void bfs (int[][] maps, 
+                    int row, 
+                    int col, 
+                    int y, 
+                    int x, 
+                    Deque<int[]> que,
+                    int[][] visited) {
+        
+        if (y > 0 && maps[y-1][x] == 1 && visited[y-1][x] == 0) {
+            visited[y-1][x] = visited[y][x]+1;
+            que.addLast(new int[]{y-1,x});
+        }
+        if (x < col-1 && maps[y][x+1] == 1 && visited[y][x+1] == 0) {
+            visited[y][x+1] = visited[y][x]+1;
+            que.addLast(new int[]{y,x+1});
+        }
+        if (y < row-1 && maps[y+1][x] == 1 && visited[y+1][x] == 0) {
+            visited[y+1][x] = visited[y][x]+1;
+            que.addLast(new int[]{y+1,x});
+        }
+        if (x > 0 && maps[y][x-1] == 1 && visited[y][x-1] == 0) {
+            visited[y][x-1] = visited[y][x]+1;
+            que.addLast(new int[]{y,x-1});
+        }
     }
 }
