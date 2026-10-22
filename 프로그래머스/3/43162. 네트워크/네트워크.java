@@ -1,25 +1,27 @@
 import java.util.*;
 class Solution {
+    int[] visited;
+    
     public int solution(int n, int[][] computers) {
         int answer = 0;
-        boolean[] connected = new boolean[n];
+        visited = new int[n];
+        
         for (int i=0; i<n; i++) {
-            if (connected[i] == false) {
-                System.out.println("독립된 노드 탐색 시작==============");
-                dfs(i, computers, connected);
+            if (visited[i] == 0) {
+                dfs(n, computers, i, visited);
                 answer++;
             }
         }
+        // 일단 여기서 1로 채워진 배열이 나와야함.
+        // System.out.println(Arrays.toString(visited));
         return answer;
     }
     
-    public void dfs(int idx, int[][] computers, boolean[] connected) {
-        System.out.println(idx + " 노드 탐색 시작");
-        connected[idx] = true;
-        for (int i=0; i<computers.length; i++) {
-            if (idx != i && connected[i] == false && computers[idx][i] == 1) {
-                System.out.println(idx + "-" + i + " 연결 노드 확인, 네트워크 개수 수정");
-                dfs(i, computers, connected);
+    public void dfs (int n, int[][] computers, int node, int[] visited) {
+        visited[node] = 1;
+        for (int i=0; i<n; i++) {
+            if (i != node && visited[i] == 0 && computers[node][i] == 1) {
+                dfs (n, computers, i, visited);
             }
         }
     }
